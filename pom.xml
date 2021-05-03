@@ -20,6 +20,7 @@
 
   <modules>
     <module>easymall-common-resources</module>
+    <module>easymall-product-service</module>
   </modules>
 
   <name>easymall-parent</name>
