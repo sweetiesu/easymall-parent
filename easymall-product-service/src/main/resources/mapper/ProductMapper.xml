@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.lit.product.mapper.ProductMapper">
+    <!--total-->
+    <select id="selectProductCount" resultType="Integer">
+        select count(product_id) from t_product;
+    </select>
+    <!--list product-->
+    <select id="selectProductsByPage" resultType="Product">
+        select * from t_product limit #{start},#{rows}
+    </select>
+    <!--select one product-->
+    <select id="selectProductById" resultType="Product">
+        select * from t_product where product_id=#{productId}
+    </select>
+    <!--新增商品数据-->
+    <insert id="insertProduct" parameterType="Product">
+        insert into t_product (
+        product_id,
+        product_name,
+        product_category,
+        product_imgurl,
+        product_num,
+        product_price,
+        product_description) values (
+        #{productId},
+        #{productName},
+        #{productCategory},
+        #{productImgurl},
+        #{productNum},
+        #{productPrice},
+        #{productDescription}
+        )
+    </insert>
+    <!--update product-->
+    <update id="updateProductById" parameterType="Product">
+        update t_product set
+        product_name=#{productName},
+        product_price=#{productPrice},
+        product_category=#{productCategory},
+        product_num=#{productNum},
+        product_imgurl=#{productImgurl},
+        product_description=#{productDescription}
+        where product_id=#{productId};
+    </update>
+</mapper>
