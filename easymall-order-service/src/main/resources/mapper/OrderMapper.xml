@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.lit.order.mapper.OrderMapper">
+	<insert id="insertOrderAndOrderItem" parameterType="Order">
+		<!--写入主表-->
+		insert into t_order (
+		order_id,order_money,order_time,
+		user_id,order_receiverinfo,order_paystate) values (
+		#{orderId},#{orderMoney},#{orderTime},
+		#{userId},#{orderReceiverinfo},#{orderPaystate}
+		);
+		<!--写入子表数据 xml标签持久化映射文件-->
+		<!--for(OrderItem oi:orderItems)-->
+		<foreach collection="orderItems" item="oi">
+			insert into t_order_item (
+			order_id,product_id,num,
+			product_name,product_price,product_image) values (
+			#{orderId},#{oi.productId},#{oi.num},
+			#{oi.productName},#{oi.productPrice},#{oi.productImage}
+			);
+		</foreach>
+	</insert>
+    <!--map定义返回字段与返回对象映射关系 , order_id ..orderId
+    t_order_item 对应orderItems-->
+    <select id="selectOrdersByUserId" resultMap="RMORDER">
+        select * from t_order inner join t_order_item
+        on t_order.order_id=t_order_item.order_id
+        and t_order.user_id=#{userId};
+        /*属性名称 orderHaha 字段名称 order_h_a_h_a*/
+        /*也可以使用resultMap result property="orderHaha" column="order_h_a_h_a"*/
+    </select>
+    <!--resultMap 生成标签 实现order对象封装-->
+    <!--id 绑定select标签的resultMap-->
+    <!--最终返回什么对象类型 type定义-->
+    <resultMap id="RMORDER" type="Order">
+        <!--定义字段与属性对象关系-->
+        <!--id 标签标示主键对象 order_id orderId-->
+        <!--producty值是属性值 orderId orderMoney orderTime..-->
+        <id property="orderId" column="order_id"/>
+        <!--非主键字段result标签-->
+        <result property="orderMoney" column="order_money"/>
+        <result property="orderTime" column="order_time"/>
+        <result property="orderReceiverinfo" column="order_receiverinfo"/>
+        <result property="orderPaystate" column="order_paystate"/>
+        <result property="userId" column="user_id"/>
+        <!--对1的数据封装 association-->
+        <!--对多关系 collection-->
+        <!--property 对象order属性-->
+        <!--javaType就是list-->
+        <!--ofType 就是元素类型-->
+        <collection property="orderItems" javaType="ArrayList"
+        ofType="OrderItem">
+            <!--重新定义每个元素的属性与查询字段的关系 product_id-->
+            <id property="id" column="id"/>
+            <result property="orderId" column="order_id"/>
+            <result property="productId" column="product_id"/>
+            <result property="num" column="num"/>
+            <result property="productImage" column="product_image"/>
+            <result property="productName" column="product_name"/>
+            <result property="productPrice" column="product_price"/>
+        </collection>
+    </resultMap>
+    <delete id="deleteOrderById">
+        delete from t_order where order_id=#{orderId};
+        delete from t_order_item where order_id=#{orderId};
+    </delete>
+
+</mapper>
