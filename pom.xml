@@ -22,6 +22,7 @@
     <module>easymall-common-resources</module>
     <module>easymall-product-service</module>
     <module>easymall-order-service</module>
+    <module>easymall-user-service</module>
   </modules>
 
   <name>easymall-parent</name>
@@ -41,6 +42,7 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+
     <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
