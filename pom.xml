@@ -23,6 +23,7 @@
     <module>easymall-product-service</module>
     <module>easymall-order-service</module>
     <module>easymall-user-service</module>
+      <module>easymall-img-service</module>
   </modules>
 
   <name>easymall-parent</name>
