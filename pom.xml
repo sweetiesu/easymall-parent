@@ -25,6 +25,7 @@
     <module>easymall-user-service</module>
       <module>easymall-img-service</module>
       <module>easymall-search-service</module>
+      <module>easymall-cart-service</module>
   </modules>
 
   <name>easymall-parent</name>
