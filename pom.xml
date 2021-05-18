@@ -23,9 +23,10 @@
     <module>easymall-product-service</module>
     <module>easymall-order-service</module>
     <module>easymall-user-service</module>
-      <module>easymall-img-service</module>
-      <module>easymall-search-service</module>
-      <module>easymall-cart-service</module>
+    <module>easymall-img-service</module>
+    <module>easymall-search-service</module>
+    <module>easymall-cart-service</module>
+    <module>easymall-order1-service</module>
   </modules>
 
   <name>easymall-parent</name>
