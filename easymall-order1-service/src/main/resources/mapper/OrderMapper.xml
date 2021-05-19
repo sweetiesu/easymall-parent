@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.lit.order.mapper.OrderMapper">
+	<insert id="insertOrderAndOrderItem" parameterType="Order">
+		<!--写入主表-->
+		insert into t_order (
+		order_id,order_money,order_time,
+		user_id,order_receiverinfo,order_paystate) values (
+		#{orderId},#{orderMoney},#{orderTime},
+		#{userId},#{orderReceiverinfo},#{orderPaystate}
+		);
+		<!--写入子表数据 xml标签持久化映射文件-->
+		<!--for(OrderItem oi:orderItems)-->
+		<foreach collection="orderItems" item="oi">
+			insert into t_order_item (
+			order_id,product_id,num,
+			product_name,product_price,product_image) values (
+			#{orderId},#{oi.productId},#{oi.num},
+			#{oi.productName},#{oi.productPrice},#{oi.productImage}
+			);
+		</foreach>
+	</insert>
+	<!-- 编写OrderRM的map内容 -->
+	<resultMap type="Order" id="OrderRM">
+		<!-- 定义一个字段域属性的关系,关联键的属性值,order_id对应的属性orderId -->
+		<id property="orderId" column="order_id"/>
+		<!-- 定义对多的关系 -->
+		<collection property="orderItems"
+					javaType="ArrayList"
+					ofType="OrderItem"
+					column="order_id"
+					select="queryOrderItems"></collection>
+	</resultMap>
+	<select id="queryOrderItems" parameterType="string" resultType="OrderItem">
+		select * from t_order_item where order_id=#{orderId};
+	</select>
+	<!-- 查询主表数据先,利用在resultMap中封装从表的数据 -->
+	<select id="queryMyorder" parameterType="String" resultMap="OrderRM">
+		select * from t_order where user_id=#{userId};
+	</select>
+    <!--map定义返回字段与返回对象映射关系 , order_id ..orderId
+    t_order_item 对应orderItems-->
+    <select id="selectOrdersByUserId" parameterType="String" resultMap="RMORDER">
+        select * from t_order inner join t_order_item
+        on t_order.order_id=t_order_item.order_id
+        and t_order.user_id=#{userId};
+        /*属性名称 orderHaha 字段名称 order_h_a_h_a*/
+        /*也可以使用resultMap result property="orderHaha" column="order_h_a_h_a"*/
+    </select>
+    <!--resultMap 生成标签 实现order对象封装-->
+    <!--id 绑定select标签的resultMap-->
+    <!--最终返回什么对象类型 type定义-->
+    <resultMap id="RMORDER" type="Order">
+        <id property="orderId" column="order_id"/>
+        <result property="orderMoney" column="order_money"/>
+        <result property="orderTime" column="order_time"/>
+        <result property="orderReceiverinfo" column="order_receiverinfo"/>
+        <result property="orderPaystate" column="order_paystate"/>
+        <result property="userId" column="user_id"/>
+        <collection property="orderItems" javaType="ArrayList"
+        ofType="OrderItem">
+            <id property="id" column="id"/>
+            <result property="orderId" column="order_id"/>
+            <result property="productId" column="product_id"/>
+            <result property="num" column="num"/>
+            <result property="productImage" column="product_image"/>
+            <result property="productName" column="product_name"/>
+            <result property="productPrice" column="product_price"/>
+        </collection>
+    </resultMap>
+    <delete id="deleteOrderById">
+        delete from t_order where order_id=#{orderId};
+        delete from t_order_item where order_id=#{orderId};
+    </delete>
+
+</mapper>
