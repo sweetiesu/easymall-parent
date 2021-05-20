@@ -27,6 +27,7 @@
     <module>easymall-search-service</module>
     <module>easymall-cart-service</module>
     <module>easymall-order1-service</module>
+      <module>easymall-seckill-service</module>
   </modules>
 
   <name>easymall-parent</name>
